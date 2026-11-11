@@ -1,0 +1,5 @@
+# The framework checkout this theme is developed against. See the root
+# repository's go.work for why the workspace is never committed: it names a
+# sibling directory that only exists in a checkout that cloned both.
+go.work
+go.work.sum

@@ -1,0 +1,26 @@
+# Which Pico CSS release this theme vendors, and what its files have to contain.
+#
+# The bundle is committed, so this file is not what a build reads; it is the
+# record of what the committed bundle is supposed to be, and the thing both
+# `fetchpico -check` and the test suite verify it against. That makes the digests
+# load-bearing rather than informational: a committed file whose bytes do not
+# match what is recorded here is a test failure, not a review problem someone
+# notices later.
+#
+# The digests were produced from the npm registry's tarball for 2.1.1 and
+# cross-checked against the SHA-1 shasum and the SHA-512 SRI integrity value that
+# registry publishes for it, so this pins the authentic upstream artifact rather
+# than whatever a mirror happened to serve on the day it was vendored.
+#
+# To update: change the version, run `go run ./internal/fetchpico -version X.Y.Z
+# -digest`, paste the result here, then `go generate ./...` and the tests.
+
+version=2.1.1
+
+# Digest of the downloaded .tgz itself, so a partially-correct archive cannot be
+# assembled from two different releases.
+tarball_sha256=4affbb56f49df6d5325610b06762156f1dcdbc6ef57cea5c136d7e8a00a8cd24
+
+# Per-file digests, keyed by where the file lands in this package.
+sha256:static/css/pico.min.css=fbc9a63fc9fc9f72d12fd7fc9806e11fa9f77ae4f9cad146b27003a1119ba3db
+sha256:static/css/LICENSE.md=afaff063e044233f917b7807dccab022f09dca474f92b642846bee4850655bbf
