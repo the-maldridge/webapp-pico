@@ -1,0 +1,41 @@
+{% extends "@core/base.p2" %}
+
+{% comment %}
+  Shared error page skeleton.
+
+  The reference ID is the whole point of this page. Everything specific about a
+  failure (the table, the path, the upstream message) is in a log line the viewer
+  cannot read and should not be able to, so this page's job is to hand them the
+  one string that connects what they saw to what the server recorded. It sits in
+  the article's footer because that is the last thing on the page and the first
+  thing to paste into a bug report.
+
+  The error text appears only when the framework says it may. That decision is
+  passed in rather than read from a flag here, so this template stays correct if
+  the disclosure rule changes; what it must never do is render a value it was
+  handed without being told to. When it does appear it goes in a <pre>, since the
+  text is a Go error chain, and the line breaks in that chain are the reason a
+  wrapped paragraph would not be readable.
+{% endcomment %}
+
+{% block title %}{{ status }} {{ statusText }} · {{ siteTitle|default:"Application" }}{% endblock %}
+
+{% block content %}
+<article>
+  <header>
+    <h1>{{ status }} {{ statusText }}</h1>
+  </header>
+
+  {% block detail %}{% endblock %}
+
+  {% if errorDetail %}
+  <pre>{{ errorDetail }}</pre>
+  {% endif %}
+
+  {% if requestId %}
+  <footer>
+    <p><small>Reference: <code>{{ requestId }}</code></small></p>
+  </footer>
+  {% endif %}
+</article>
+{% endblock %}

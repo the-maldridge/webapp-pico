@@ -1,0 +1,11 @@
+{% extends "@core/errors/base.p2" %}
+
+{% block detail %}
+<p>
+  Nothing is here. The address may be wrong, the page may have moved, or it may
+  have been removed.
+</p>
+<p>
+  <a role="button" href="/">Go to the start page</a>
+</p>
+{% endblock %}

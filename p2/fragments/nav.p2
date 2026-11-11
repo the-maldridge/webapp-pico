@@ -1,0 +1,77 @@
+{% comment %}
+  Navigation fragment.
+
+  This fragment emits two <ul> elements instead of one, and that difference is
+  the entire layout. A <nav> in Pico is a flex row with justify-content:
+  space-between, and the <ul> elements inside it are the groups that row
+  distributes. The brand is already the first one, so the section links become
+  the middle group and the account controls the last, which lands the site name
+  at the left edge, the sections in the middle, and Sign in or Sign out at the
+  right, with no CSS of our own and no utility classes.
+
+  There is deliberately no collapse toggle here. Pico has no breakpoint at which
+  a navbar hides itself and waits for a click to reappear, so the row just gets
+  tighter until it wraps. That looks worse on a narrow phone than a burger menu
+  does, and better than a menu whose links do not exist when scripting is turned
+  off, which is the trade a JavaScript navbar makes. Keeping the navigation
+  markup-only also keeps this theme free of any script at all.
+
+  The items arrive already filtered: deciding whether a viewer may see a link
+  belongs to the authorization layer, and a template that re-implemented it here
+  would be a second answer to "what is WANT:ADMIN", one that disagrees with the
+  first as soon as the rules grow a case, and disagrees in the direction of
+  showing a link the route behind it then refuses.
+
+  The active item comes from pageBase, which the framework derives from the
+  request path, so a page cannot highlight the wrong thing by forgetting to say
+  where it is. The active state is the aria-current attribute rather than a
+  class, because that is what Pico's links key their active appearance off, and
+  it is read by assistive technology as well as by the stylesheet.
+{% endcomment %}
+<ul>
+  {% for item in navElements %}
+  <li>
+    {% if item.Children %}
+    {%- comment %}
+      A group with children becomes one of Pico's dropdowns, which are a
+      <details> and a <summary> and therefore open on a click and close on
+      another with no script behind them.
+    {%- endcomment %}
+    <details class="dropdown">
+      <summary>{{ item.Label }}</summary>
+      <ul>
+        {% for child in item.Children %}
+        <li><a href="{{ child.Href }}">{{ child.Label }}</a></li>
+        {% endfor %}
+      </ul>
+    </details>
+    {% else %}
+    <a href="{{ item.Href }}"{% if item.Base == pageBase %} aria-current="page"{% endif %}>
+      {%- if item.Icon %}<span aria-hidden="true">{{ item.Icon }}</span> {% endif -%}
+      {{ item.Label }}
+    </a>
+    {% endif %}
+  </li>
+  {% empty %}
+  <li><small>No sections available</small></li>
+  {% endfor %}
+</ul>
+
+<ul>
+  {% if isAuthenticated %}
+  <li>
+    {%- comment %}
+      Signing out is a POST, so it is a form with the CSRF token rather than a
+      link, and a link that a prefetching crawler could follow by accident.
+    {%- endcomment %}
+    <form method="post" action="{{ signOutURL|default:'/logout' }}">
+      {{ csrfInput }}
+      <button type="submit" class="secondary">Sign out {{ user.Identity }}</button>
+    </form>
+  </li>
+  {% else %}
+  <li>
+    <a href="{{ signInURL|default:'/login' }}" role="button" class="secondary">Sign in</a>
+  </li>
+  {% endif %}
+</ul>

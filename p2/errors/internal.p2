@@ -1,0 +1,13 @@
+{% extends "@core/errors/base.p2" %}
+
+{% block detail %}
+<p>
+  Something failed on the server. Nothing you did caused it, and nothing you
+  typed is stored because of it.
+</p>
+<p>
+  The reference below identifies this exact failure in the server's log. It is
+  the fastest thing to include when reporting the problem, and it contains
+  nothing useful to anyone who cannot read that log.
+</p>
+{% endblock %}

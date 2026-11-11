@@ -1,0 +1,33 @@
+{% extends "@core/errors/base.p2" %}
+
+{% block detail %}
+{% if isAuthenticated %}
+<p>
+  You are signed in as {{ user.Identity }}, which is not enough for this page.
+</p>
+{% else %}
+<p>
+  This page needs an account. Signing in may be enough.
+</p>
+{% endif %}
+
+{% comment %}
+  The grant is named whoever is asking. Withholding it from an anonymous viewer
+  reads as an accident, and the person best placed to fix a missing permission is
+  often the one who cannot reach the page to see it.
+{% endcomment %}
+{% if requiredPerm %}
+<p>Needed: <code>{{ requiredPerm }}</code></p>
+{% endif %}
+
+{% if isAuthenticated %}
+<p>
+  Asking for it costs nothing and is the only way to find out who grants it.
+  What you can reach is in the navigation above.
+</p>
+{% else %}
+<p>
+  <a role="button" href="{{ signInURL|default:'/login' }}">Sign in</a>
+</p>
+{% endif %}
+{% endblock %}
